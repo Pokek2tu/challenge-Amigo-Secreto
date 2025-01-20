@@ -1,0 +1,62 @@
+const nameInput = document.getElementById("nameInput");
+const addNameBtn = document.getElementById("addName");
+const nameList = document.getElementById("nameList");
+const sortearBtn = document.getElementById("sortear");
+const resetBtn = document.getElementById("reset");
+const resultDiv = document.getElementById("result");
+const errorDiv = document.getElementById("error");
+
+let names = [];
+
+// Añadir nombres a la lista
+addNameBtn.addEventListener("click", () => {
+  const name = nameInput.value.trim();
+  if (name) {
+    names.push(name);
+    updateNameList();
+    nameInput.value = "";
+    showError(""); // Limpiar errores
+  } else {
+    showError("Por favor, ingresa un nombre.");
+  }
+});
+
+// Actualizar lista visual
+function updateNameList() {
+  nameList.innerHTML = names
+    .map((name, index) => `<li>${index + 1}. ${name}</li>`)
+    .join("");
+}
+
+// Sortear nombres
+sortearBtn.addEventListener("click", () => {
+  if (names.length < 2) {
+    showError("Debes añadir al menos dos nombres para sortear.");
+    return;
+  }
+  const shuffled = [...names].sort(() => 0.5 - Math.random());
+  let resultado = shuffled.map((name, i) => `${name} → ${shuffled[(i + 1) % shuffled.length]}`).join("<br>");
+  resultDiv.innerHTML = resultado;
+  resultDiv.classList.remove("hidden");
+  showError(""); // Limpiar errores
+});
+
+// Resetear todo
+resetBtn.addEventListener("click", () => {
+  names = [];
+  updateNameList();
+  resultDiv.classList.add("hidden");
+  resultDiv.innerHTML = "";
+  nameInput.value = "";
+  showError(""); // Limpiar errores
+});
+
+// Mostrar error
+function showError(message) {
+  if (message) {
+    errorDiv.textContent = message;
+    errorDiv.classList.remove("hidden");
+  } else {
+    errorDiv.classList.add("hidden");
+  }
+}
